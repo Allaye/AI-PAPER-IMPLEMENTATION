@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 .ipynb_checkpoints
+=======
+>>>>>>> 709cbc3c3c4d54bed01f15a4e4bd8d4b67e9f9c9
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -103,7 +106,10 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+<<<<<<< HEAD
 mlvenv
+=======
+>>>>>>> 709cbc3c3c4d54bed01f15a4e4bd8d4b67e9f9c9
 .env
 .venv
 env/
