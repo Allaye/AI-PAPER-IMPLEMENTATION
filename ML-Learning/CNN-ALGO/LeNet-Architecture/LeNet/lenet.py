@@ -48,6 +48,9 @@ def prepare_dataset(batch_size):
 
 class LeNet(nn.Module):
     '''
+    implementation of the LeNet5 architecture as proposed by Yann Lecun and others,
+    see https://en.wikipedia.org/wiki/LeNet-5
+    this implementation might just be close as possible to the original implementation
     
     '''
     def __init__(self):
