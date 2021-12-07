@@ -79,3 +79,4 @@ class LeNet(nn.Module):
         loss_fn = nn.CrossEntropyLoss()
         # define the optimizer
         optimizer = torch.optim.Adam(self.parameters(), lr)
+        return loss_fn, optimizer
