@@ -55,6 +55,9 @@ class LeNet(nn.Module):
     
     '''
     def __init__(self):
+        '''
+        instantiate the LeNet5 architecture
+        '''
         super().__init__()
         self.conv1 = nn.Conv2d(3, 6, 5, 1)
         self.conv2 = nn.Conv2d(6, 16, 5, 1)
@@ -64,6 +67,9 @@ class LeNet(nn.Module):
         self.fc2 = nn.Linear(84, 10)
 
     def forward(self, x):
+        '''
+        pass the input through the network, in there respective layers and order and return the output
+        '''
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
