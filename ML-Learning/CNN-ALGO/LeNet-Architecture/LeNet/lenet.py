@@ -67,9 +67,15 @@ class LeNet(nn.Module):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
-        x = x.view(-1, 120)
+        x = x.view(-1, 120) # x.reshape[0], -1 flatten the output of the convolutional layers
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
 
-    def loss_optimizer(self):
-        pass
+    def loss_optimizer(self, lr=0.001):
+        '''
+        define the loss and optimizer
+        '''
+        # define the loss function
+        loss_fn = nn.CrossEntropyLoss()
+        # define the optimizer
+        optimizer = torch.optim.Adam(self.parameters(), lr)
