@@ -117,3 +117,34 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
             if (i + 1) % 100 == 0:
                 print(f'Epoch [{epoch + 1}/{epochs}], Step [{i + 1}/{n_total_steps}], Loss: {loss.item():.4f}')
 
+
+def model_eval(model, test_loader, device, batch_size):
+    '''
+    perform model evaluation and testing using the test dataset
+    '''
+    # disengage the model from tracking the gradients
+    with torch.no_grad():
+        # initialize variables
+        total_correct = 0
+        total_sample = 0
+        n_class_correct = [0 for i in range(10)]
+        n_class_sample = [0 for i in range(10)]
+        # loop over the test set
+        for images, labels in test_loader:
+            # move tensors to the configured device
+            images = images.to(device)
+            labels = labels.to(device)
+
+            # perform a forward pass
+            outputs = model(images)
+
+            # calculate the number of correct predictions
+            _, prediction = torch.max(outputs.data, 1)
+            total_sample = total_sample + labels.size(0)
+            total_correct = total_correct + (prediction == labels).sum().item()
+            for i in range(batch_size):
+                label = labels[i]
+                pred = prediction[i]
+                if label == pred:
+                    n_class_correct[label] = n_class_correct[label] + 1
+                n_class_sample[label] = n_class_sample[label] + 1
