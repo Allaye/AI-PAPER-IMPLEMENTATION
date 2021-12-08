@@ -113,4 +113,7 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
             loss.backward()
             optimizer.step()
 
-            
+            # print training statistics and other information
+            if (i + 1) % 100 == 0:
+                print(f'Epoch [{epoch + 1}/{epochs}], Step [{i + 1}/{n_total_steps}], Loss: {loss.item():.4f}')
+
