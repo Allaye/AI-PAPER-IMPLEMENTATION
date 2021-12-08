@@ -91,3 +91,8 @@ class LeNet(nn.Module):
         return loss_fn, optimizer
 
 
+def train(model, train_loader, loss_fn, optimizer):
+    '''
+    train the model
+    '''
+    model.train()
