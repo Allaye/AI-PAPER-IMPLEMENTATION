@@ -31,9 +31,9 @@ def prepare_dataset(batch_size):
     # MNIST dataset
     train_dataset = torchvision.datasets.CIFAR10(root='./',train=True,
                                                transform=transforms.ToTensor(),
-                                               download=True)
+                                               download=False)
     test_dataset = torchvision.datasets.CIFAR10(root='./', train=False, transform=transforms.ToTensor())
-
+    
     # Data loader
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
@@ -44,8 +44,11 @@ def prepare_dataset(batch_size):
 
     return train_loader, test_loader, classes
 
-a, b, c = prepare_dataset(20)
-print(a)
+# a, b, c = prepare_dataset(20)
+# for i, (image, lable) in enumerate(a):
+#     print(image.shape)
+#     print(lable)
+#     break
 
 class LeNet(nn.Module):
     '''
@@ -86,3 +89,5 @@ class LeNet(nn.Module):
         # define the optimizer
         optimizer = torch.optim.Adam(self.parameters(), lr)
         return loss_fn, optimizer
+
+
