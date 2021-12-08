@@ -139,3 +139,12 @@ def model_eval(model, test_loader, device, batch_size):
             outputs = model(images)
 
             # calculate the number of correct predictions
+            _, prediction = torch.max(outputs.data, 1)
+            total_sample = total_sample + labels.size(0)
+            total_correct = total_correct + (prediction == labels).sum().item()
+            for i in range(batch_size):
+                label = labels[i]
+                pred = prediction[i]
+                if label == pred:
+                    n_class_correct[label] = n_class_correct[label] + 1
+                n_class_sample[label] = n_class_sample[label] + 1
