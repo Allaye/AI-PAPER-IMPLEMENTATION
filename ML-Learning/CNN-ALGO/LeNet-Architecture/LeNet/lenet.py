@@ -125,51 +125,17 @@ def model_eval(model, test_loader, device, batch_size):
     # disengage the model from tracking the gradients
     with torch.no_grad():
         # initialize variables
-        test_loss = 0
-        correct = 0
-        total = 0
+        total_correct = 0
+        total_sample = 0
+        n_class_correct = [0 for i in range(10)]
+        n_class_sample = [0 for i in range(10)]
         # loop over the test set
         for images, labels in test_loader:
             # move tensors to the configured device
             images = images.to(device)
             labels = labels.to(device)
+
             # perform a forward pass
             outputs = model(images)
-            # calculate the loss
-            test_loss += F.cross_entropy(outputs, labels, reduction='sum').item()
+
             # calculate the number of correct predictions
-            pred = outputs.max(1, keepdim=True)[1]
-            correct += pred.eq(labels.view_as(pred)).sum().item()
-            # calculate the total number of test images
-            total += labels.size(0)
-        # calculate the average test loss and accuracy
-        test_loss /= total
-        accuracy = 100. * correct / total
-        # print the average test loss and accuracy
-        print(f'Test Loss: {test_loss:.4f}, Accuracy: {accuracy:.2f}%')
-        return accuracy
-    '''
-    perform model evaluation and return the accuracy
-    '''
-    # set the model to evaluation mode
-    model.eval()
-    # track the number of correct predictions
-    correct = 0
-    # track the number of images
-    total = 0
-    # iterate over the test dataset
-    with torch.no_grad():
-        for data in test_loader:
-            # get the images and labels
-            images, labels = data[0].to(device), data[1].to(device)
-            # forward pass
-            outputs = model(images)
-            # get the predictions
-            _, predicted = torch.max(outputs.data, 1)
-            # calculate the number of correct predictions
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    # calculate the accuracy
-    accuracy = 100 * correct / total
-    # print the accuracy
-    print(f'Accuracy of the network on the 10000 test images: {correct}/{total} ({accuracy:.4f}%)')
