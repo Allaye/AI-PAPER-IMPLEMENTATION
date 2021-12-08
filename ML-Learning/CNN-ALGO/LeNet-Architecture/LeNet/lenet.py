@@ -44,7 +44,8 @@ def prepare_dataset(batch_size):
 
     return train_loader, test_loader, classes
 
-# a, b, c = prepare_dataset(20)
+a, b, c = prepare_dataset(100)
+print(len(a))
 # for i, (image, lable) in enumerate(a):
 #     print(image.shape)
 #     print(lable)
@@ -91,8 +92,25 @@ class LeNet(nn.Module):
         return loss_fn, optimizer
 
 
-def train(model, train_loader, loss_fn, optimizer):
+def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer):
     '''
-    train the model
+    perform model training loop and hyperparameter tuning
     '''
-    model.train()
+    n_total_steps = len(train_loader)
+    for epoch in range(epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            # move tensors to the configured device
+            images = images.to(device)
+            labels = labels.to(device)
+            # perform a forward pass
+            outputs = model(images)
+
+            # calculate the loss
+            loss = loss_fn(outputs, labels)
+
+            # clear the gradients and perform a backward and optimize step
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            
