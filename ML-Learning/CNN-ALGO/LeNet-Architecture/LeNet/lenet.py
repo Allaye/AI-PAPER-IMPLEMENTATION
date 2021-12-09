@@ -150,4 +150,7 @@ def model_eval(model, test_loader, device, batch_size):
                 n_class_sample[label] = n_class_sample[label] + 1
         accuracy = 100.0 * total_correct / total_sample
         print('accuracy of the network on the 10000 test images: {} %'.format(accuracy))
-        
+
+        for i in range(10):
+            accuracy = 100.0 * n_class_correct[i] / n_class_sample[i]
+             
