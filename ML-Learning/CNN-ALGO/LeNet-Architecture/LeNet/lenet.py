@@ -148,3 +148,32 @@ def model_eval(model, test_loader, device, batch_size):
                 if label == pred:
                     n_class_correct[label] = n_class_correct[label] + 1
                 n_class_sample[label] = n_class_sample[label] + 1
+        accuracy = 100.0 * total_correct / total_sample
+        print('accuracy of the network on the 10000 test images: {} %'.format(accuracy))
+
+        for i in range(10):
+            accuracy = 100.0 * n_class_correct[i] / n_class_sample[i]
+            print('accuracy is {} class: {} %'.format(i, accuracy)) 
+
+
+
+if __name__ == "__main__":
+    # load hyperparameters
+    learning_rate, input_size, hidden_size, num_classes, epochs, batch_size = hyper_parameters()
+    
+    # load dataset
+    train_loader, test_loader, classes = prepare_dataset(batch_size)
+
+    # configure device
+    device = configure_device()
+
+    # instanciate the model
+    model = LeNet().to(device)
+
+    # define loss and optimizer 
+    loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
+
+    # train the model
+    train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer)
+    
+    
