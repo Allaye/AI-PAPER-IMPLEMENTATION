@@ -161,4 +161,7 @@ if __name__ == "__main__":
     # load hyperparameters
     learning_rate, input_size, hidden_size, num_classes, epochs, batch_size = hyper_parameters()
     
+    # load dataset
+    train_loader, test_loader, classes = prepare_dataset(batch_size)
+
     
