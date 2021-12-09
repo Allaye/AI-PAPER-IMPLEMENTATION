@@ -158,4 +158,7 @@ def model_eval(model, test_loader, device, batch_size):
 
 
 if __name__ == "__main__":
-    pass
+    # load hyperparameters
+    learning_rate, input_size, hidden_size, num_classes, epochs, batch_size = hyper_parameters()
+    
+    
