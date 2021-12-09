@@ -167,5 +167,7 @@ if __name__ == "__main__":
     # configure device
     device = configure_device()
 
+    # instanciate the model
+    model = LeNet().to(device)
     
     
