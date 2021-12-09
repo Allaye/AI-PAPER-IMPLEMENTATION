@@ -169,5 +169,9 @@ if __name__ == "__main__":
 
     # instanciate the model
     model = LeNet().to(device)
+
+    # define loss and optimizer 
+    loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
+
     
     
