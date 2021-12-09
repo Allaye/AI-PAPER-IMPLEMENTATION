@@ -164,4 +164,8 @@ if __name__ == "__main__":
     # load dataset
     train_loader, test_loader, classes = prepare_dataset(batch_size)
 
+    # configure device
+    device = configure_device()
+
+    
     
