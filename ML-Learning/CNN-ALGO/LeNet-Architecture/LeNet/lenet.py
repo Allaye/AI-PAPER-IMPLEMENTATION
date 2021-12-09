@@ -174,5 +174,6 @@ if __name__ == "__main__":
     loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
 
     # train the model
-    train()
+    train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer)
+    
     
