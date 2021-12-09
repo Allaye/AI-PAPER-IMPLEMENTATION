@@ -173,5 +173,6 @@ if __name__ == "__main__":
     # define loss and optimizer 
     loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
 
-    
+    # train the model
+    train()
     
