@@ -153,4 +153,4 @@ def model_eval(model, test_loader, device, batch_size):
 
         for i in range(10):
             accuracy = 100.0 * n_class_correct[i] / n_class_sample[i]
-             
+            print('accuracy is {} class: {} %'.format(i, accuracy)) 
