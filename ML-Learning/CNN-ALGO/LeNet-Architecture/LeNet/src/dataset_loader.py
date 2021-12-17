@@ -33,12 +33,11 @@ def prepare_testset(imagepath, exten=(".jpg", ".png", ".jpeg")):
     and return a tensor of the images or image
     
     """
-    # dataset = datasets.ImageFolder(root=imagepath, transform=transforms.Compose([transforms.ToTensor()]))
+    # dataset = datasets.ImageFolder(root=imagepath
     filenames = []
     for file in os.scandir(imagepath):
 
         if (file.is_file() and file.name.endswith(exten)):
-            ## print(file.path)
             filenames.append(file.path)
     batch_size = len(filenames)
     batches = torch.zeros(batch_size, 3, 32, 32, dtype=torch.uint8)
