@@ -1,5 +1,8 @@
+import os
 import torch
-from torchvision import transforms, datasets
+from torchvision import transforms
+import torchvision
+from torchvision.datasets import vision
 from lenet import LeNet
 
 
@@ -10,8 +13,18 @@ def load_checkpoint(filepath):
     model.load_state_dict(checkpoint["model_state_dict"])
     return model
 
-def prepare_test_set(imagepath):
-    dataset = datasets.ImageFolder(root=imagepath, transform=transforms.Compose([transforms.ToTensor(), transforms.Grayscale(), transforms.Resize((32, 32))]))
-    return dataset
+def prepare_test_set(imagepath, exten=(".jpg", ".png", ".jpeg")):
+    # dataset = datasets.ImageFolder(root=imagepath, transform=transforms.Compose([transforms.ToTensor()]))
+    for file in os.scandir(imagepath):
+        if (file.is_file() and file.name.endswith(exten)):
+            print(file.name)
+        
+    # dataset = torchvision.io.read_image(imagepath)
+    return None
+
+
 def make_inference(model, test_loader):
     pass
+
+d = prepare_test_set("./img/")
+print(d)
