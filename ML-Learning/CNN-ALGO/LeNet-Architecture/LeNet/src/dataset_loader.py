@@ -9,7 +9,7 @@ def prepare_dataset(batch_size):
     get the CIFAR10 dataset, transform it to tensor, convert it into grayscale and normalize it
     return a trainloader, testloader and data classes
     '''
-    # MNIST dataset
+    # CIFAR10 dataset
 
     train_dataset = torchvision.datasets.CIFAR10(root='./',train=True,
                                                transform=transforms.Compose([transforms.ToTensor(), transforms.Grayscale()]),
@@ -33,7 +33,7 @@ def prepare_testset(imagepath, exten=(".jpg", ".png", ".jpeg")):
     and return a tensor of the images or image
     
     """
-    # dataset = datasets.ImageFolder(root=imagepath
+    
     filenames = []
     for file in os.scandir(imagepath):
 
