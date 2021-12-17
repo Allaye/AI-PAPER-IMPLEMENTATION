@@ -26,10 +26,16 @@ def prepare_dataset(batch_size):
     return train_loader, test_loader, classes
 
 
-def prepare_test_set(imagepath, exten=(".jpg", ".png", ".jpeg")):
+def prepare_testset(imagepath, exten=(".jpg", ".png", ".jpeg")):
+    """
+    prepare dataset to use for normal testing, this function accepts a path to the file and the extension of the file
+    and return a tensor of the images or image
+    
+    """
     # dataset = datasets.ImageFolder(root=imagepath, transform=transforms.Compose([transforms.ToTensor()]))
     filenames = []
     for file in os.scandir(imagepath):
+        
         if (file.is_file() and file.name.endswith(exten)):
             ## print(file.path)
             filenames.append(file.path)
