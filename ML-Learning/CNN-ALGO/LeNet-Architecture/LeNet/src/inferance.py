@@ -1,8 +1,4 @@
-import os
 import torch
-from torchvision import transforms
-import torchvision
-from torchvision.datasets import vision
 from lenet import LeNet
 
 
@@ -16,8 +12,5 @@ def load_checkpoint(filepath):
 
 
 
-def make_inference(model, test_loader):
+def make_inference(model):
     pass
-
-d = prepare_test_set("./img/")
-print(d)
