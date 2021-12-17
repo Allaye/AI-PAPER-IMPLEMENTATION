@@ -15,10 +15,12 @@ def load_checkpoint(filepath):
 
 def prepare_test_set(imagepath, exten=(".jpg", ".png", ".jpeg")):
     # dataset = datasets.ImageFolder(root=imagepath, transform=transforms.Compose([transforms.ToTensor()]))
+    filename = []
     for file in os.scandir(imagepath):
         if (file.is_file() and file.name.endswith(exten)):
-            print(file.name)
-        
+            ## print(file.path)
+            filename.append(file.path)
+    batch_size = len(filename)
     # dataset = torchvision.io.read_image(imagepath)
     return None
 
