@@ -84,7 +84,7 @@ def save_checkpoint(model, epoch, optimizer, best_accuracy):
         "optimizer_state_dict": optimizer.state_dict(),
         "best_accuracy": best_accuracy
     }
-    torch.save(check_point, "checkpoint.pth")
+    torch.save(check_point, f"checkpoint{epoch}.pth")
     return None
 
 
