@@ -24,4 +24,4 @@ We have a lot of packages, libraries and APIs like Scikit learn, Theano and Tens
 At the end of the day, a Machine Learning engineer’s typical output or deliverable is software. And often it is a small component that fits into a larger ecosystem of products and services. You need to understand how these different pieces work together, communicate with them and build appropriate interfaces for your component that others will depend on.
 
 
-Careful system design may be necessary to avoid bottlenecks and let your algorithms scale well with increasing volumes of data. Software engineering best practices (including requirements analysis, system design, testing, documentation are important for productivity, collaboration, quality and maintainability.
+Careful system design may be necessary to avoid bottlenecks and let your algorithms scale well with increasing volumes of data. Software engineering best practices (including requirements analysis, system design, testing, documentation are important for Productivity, collaboration, quality and maintainability.
