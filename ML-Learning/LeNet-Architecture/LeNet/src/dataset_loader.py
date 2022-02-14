@@ -33,14 +33,14 @@ def prepare_testset(imagepath, exten=(".jpg", ".png", ".jpeg")):
     and return a tensor of the images or image
     
     """
-    
+    torchvision
     filenames = []
     for file in os.scandir(imagepath):
 
         if (file.is_file() and file.name.endswith(exten)):
             filenames.append(file.path)
     batch_size = len(filenames)
-    batches = torch.zeros(batch_size, 3, 32, 32, dtype=torch.uint8)
+    batches = torch.zeros(batch_size, 1, 32, 32, dtype=torch.float)
     for i, filename in enumerate(filenames):
-        batches[i] = transforms.transforms.Resize((32, 32))(torchvision.io.read_image(filename))
+        batches[i] = transforms.Compose([transforms.Resize((32, 32)), transforms.Grayscale()])(torchvision.io.read_image(filename))
     return batches

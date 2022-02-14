@@ -15,6 +15,6 @@ def hyperparameter():
     define hyper parameters
     '''
     lr = 0.001
-    epochs = 10
+    epochs = 20
     batch_size = 100
     return lr, epochs, batch_size

@@ -1,0 +1,27 @@
+Skills Needed To Become A Machine Learning Engineer
+Well to begin with, it definitely has to be the fundamentals and programming skills.
+
+You will require some basic knowledge on data structures such as stacks, queues, multi-dimensional arrays, trees, graphs and some basic algorithms like searching, sorting, optimization, dynamic programming etc.
+
+You will need to know a little bit about memory, cache, bandwidth, deadlocks and all these simple concepts.
+
+1. Probability and statistics:
+Well here as well guys, some basics on conditional probability, independence and all that.
+
+Machine learning will require a few techniques such as Bayes nets, hidden Markov models and all these concepts.
+
+And then statistics is really simple, right? Mean, median, variance and all. Even distributions like normal, binomial, what else, yeah, poison and even uniform distribution.
+
+2. Data Modeling and Evaluation:
+Data modeling is the process of estimating the underlying structure of a given dataset, with the goal of finding useful patterns such as correlations and clusters.
+
+A key part of this estimation process is continually evaluating how good a given model is. Depending on the task at hand, you will need to choose an appropriate accuracy measure like log-loss for classification, sum-of-squared-errors for regression.
+
+3. Applying Machine Learning Algorithms and Libraries:
+We have a lot of packages, libraries and APIs like Scikit learn, Theano and Tensorflow. But applying them effectively involves choosing a suitable model, a learning procedure to fit the data and understanding hyper-parameters and all.
+
+4. Software Engineering and system design:
+At the end of the day, a Machine Learning engineer’s typical output or deliverable is software. And often it is a small component that fits into a larger ecosystem of products and services. You need to understand how these different pieces work together, communicate with them and build appropriate interfaces for your component that others will depend on.
+
+
+Careful system design may be necessary to avoid bottlenecks and let your algorithms scale well with increasing volumes of data. Software engineering best practices (including requirements analysis, system design, testing, documentation are important for productivity, collaboration, quality and maintainability.
