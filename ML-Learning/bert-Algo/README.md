@@ -1,2 +1,0 @@
-# FIN-SENTI
-
