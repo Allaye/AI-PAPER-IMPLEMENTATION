@@ -154,3 +154,4 @@ cifar-10-python.tar.gz
 /src/img/
 /src/__pycache__
 *checkpoint18.pth
+../venvlenet/
