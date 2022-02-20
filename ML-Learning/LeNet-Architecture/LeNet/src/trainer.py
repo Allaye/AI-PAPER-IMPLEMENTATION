@@ -39,9 +39,9 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
 
 
 def model_eval(model, test_loader, device, batch_size):
-    '''
+    """
     perform model evaluation and testing using the test dataset
-    '''
+    """
     # disengage the model from tracking the gradients
     with torch.no_grad():
         # initialize variables
@@ -84,7 +84,7 @@ def save_checkpoint(model, epoch, optimizer, best_accuracy):
         "optimizer_state_dict": optimizer.state_dict(),
         "best_accuracy": best_accuracy
     }
-    torch.save(check_point, f"checkpoint{epoch}.pth")
+    torch.save(check_point, f"/models/checkpoint{epoch}.pth")
     return None
 
 
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     print("configure device")
     device = configure_device()
 
-    # instanciate the model
-    print("instaintiat model")
+    # instantiate the model
+    print("instantiate model")
     model = LeNet().to(device)
 
     # define loss and optimizer
@@ -110,5 +110,5 @@ if __name__ == "__main__":
     loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
 
     # train the model
-    print("runing the training function")
+    print("running the training function")
     train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer)
