@@ -1,15 +1,10 @@
-from flask import Flask, jsonify
-
-# from LeNet.src import inferance
-from src import inferance
-
-app = Flask(__name__)
+from flask import jsonify
+from src.routes import app
 
 
 @app.get('/')
 def home():
-    d = inferance
-    print(d)
+
     return jsonify(f'Hello World!, this is an endpoint for introducing the LeNet model in PyTorch.')
 
 
