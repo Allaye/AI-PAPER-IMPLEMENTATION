@@ -4,10 +4,12 @@ import torchvision
 import torchvision.transforms as transforms
 
 
-def prepare_dataset(batch_size):
+def prepare_dataset(batch_size) -> tuple:
     """
     get the CIFAR10 dataset, transform it to tensor, convert it into grayscale and normalize it
     return a trainloader, testloader and data classes
+    :param batch_size: batch size that the dataset will be loaded in
+    :rtype: tuple: contains the trainloader, testloader and data classes
     """
     # CIFAR10 dataset
 
@@ -33,7 +35,9 @@ def prepare_testset(imagepath, ext=(".jpg", ".png", ".jpeg")) -> tuple:
     """
     prepare dataset to use for normal testing, this function accepts a path to the file and the extension of the file
     and return a tensor of the image in batch form and classes
-    :rtype: tuple
+    :param imagepath: path to the image
+    :param ext: extension of the image
+    :rtype: tuple: contains the tensor of the images in batches and their respective classes
     """
     # get the image
     filenames = []
