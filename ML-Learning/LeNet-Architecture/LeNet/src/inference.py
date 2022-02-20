@@ -3,7 +3,7 @@ from dataset_loader import prepare_testset
 from lenet import LeNet
 
 
-def load_checkpoint(filepath):
+def load_checkpoint(filepath) -> LeNet:
     """
     load a pytorch model and put it in eval mode
     :param filepath:
@@ -17,7 +17,7 @@ def load_checkpoint(filepath):
     return model
 
 
-def make_inference(test_set, modelpath="./models/checkpoint18.pth"):
+def make_inference(test_set, modelpath="./models/checkpoint18.pth") -> torch.Tensor:
     """
     make inference on test set
     :param test_set:

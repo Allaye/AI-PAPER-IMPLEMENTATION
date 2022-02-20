@@ -11,9 +11,11 @@ class LeNet(nn.Module):
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         instantiate the LeNet5 architecture
+        :param self: class instance
+        :rtype: None
         """
         super().__init__()
         self.conv1 = nn.Conv2d(1, 6, 5, 1)
@@ -23,9 +25,11 @@ class LeNet(nn.Module):
         self.fc1 = nn.Linear(120, 84)
         self.fc2 = nn.Linear(84, 10)
 
-    def forward(self, x):
+    def forward(self, x) -> torch.Tensor:
         """
         pass the input through the network, in their respective layers and order and return the output
+        :param x: input
+        :rtype: torch.Tensor
         """
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
@@ -35,9 +39,11 @@ class LeNet(nn.Module):
         x = self.fc2(x)
         return x
 
-    def loss_optimizer(self, lr=0.001):
+    def loss_optimizer(self, lr=0.001) -> tuple:
         """
         define the loss and optimizer
+        :param lr: learning rate
+        :rtype: tuple of torch.nn.CrossEntropyLoss and torch.optim.SGD
         """
         # define the loss function
         loss_fn = nn.CrossEntropyLoss()
