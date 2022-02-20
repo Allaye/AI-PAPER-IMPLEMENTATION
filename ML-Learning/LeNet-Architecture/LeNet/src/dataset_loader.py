@@ -29,11 +29,11 @@ def prepare_dataset(batch_size):
     return train_loader, test_loader, classes
 
 
-def prepare_testset(imagepath, ext=(".jpg", ".png", ".jpeg")):
+def prepare_testset(imagepath, ext=(".jpg", ".png", ".jpeg")) -> tuple:
     """
     prepare dataset to use for normal testing, this function accepts a path to the file and the extension of the file
-    and return a tensor of the images or image
-    
+    and return a tensor of the image in batch form and classes
+    :rtype: tuple
     """
     # get the image
     filenames = []
@@ -46,4 +46,6 @@ def prepare_testset(imagepath, ext=(".jpg", ".png", ".jpeg")):
     for i, filename in enumerate(filenames):
         batches[i] = transforms.Compose([transforms.Resize((32, 32)), transforms.Grayscale()])(
             torchvision.io.read_image(filename))
-    return batches
+    classes = ('plane', 'car', 'bird', 'cat',
+               'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    return batches, classes
