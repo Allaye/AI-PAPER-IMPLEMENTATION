@@ -4,11 +4,10 @@ from dataset_loader import prepare_dataset
 from configuration import hyperparameter, configure_device
 
 
-
 def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer):
-    '''
+    """
     perform model training loop and hyperparameter tuning
-    '''
+    """
     best_accuracy = 0
     n_total_steps = len(train_loader)
     print(f"starting training now!")
@@ -34,9 +33,10 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
             # perform model evaluation and testing
             test_accuracy = model_eval(model, test_loader, device, batch_size)
             if (test_accuracy > best_accuracy):
-               best_accuracy = test_accuracy
-               save_checkpoint(model, epoch, optimizer, best_accuracy)
+                best_accuracy = test_accuracy
+                save_checkpoint(model, epoch, optimizer, best_accuracy)
     return model
+
 
 def model_eval(model, test_loader, device, batch_size):
     '''
@@ -73,7 +73,7 @@ def model_eval(model, test_loader, device, batch_size):
 
         for i in range(10):
             class_accuracy = 100.0 * n_class_correct[i] / n_class_sample[i]
-            print('accuracy is {} class: {} %'.format(i, class_accuracy)) 
+            print('accuracy is {} class: {} %'.format(i, class_accuracy))
     return total_accuracy
 
 
@@ -88,12 +88,11 @@ def save_checkpoint(model, epoch, optimizer, best_accuracy):
     return None
 
 
-
 if __name__ == "__main__":
     # load hyperparameters
     print("loading hyperparameters")
     learning_rate, epochs, batch_size = hyperparameter()
-    
+
     # load dataset
     print("loading training set")
     train_loader, test_loader, classes = prepare_dataset(batch_size)
@@ -107,7 +106,7 @@ if __name__ == "__main__":
     model = LeNet().to(device)
 
     # define loss and optimizer
-    print("optimizing model") 
+    print("optimizing model")
     loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
 
     # train the model
