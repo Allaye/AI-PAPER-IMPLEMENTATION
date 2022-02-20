@@ -12,7 +12,7 @@ def load_checkpoint(filepath):
     return model
 
 
-def make_inference(modelpath, test_set):
+def make_inference(test_set, modelpath="./models/checkpoint18.pth"):
     batch_data, classes = prepare_testset(test_set)
     inference_model = load_checkpoint(modelpath)
     outputs = inference_model(batch_data)

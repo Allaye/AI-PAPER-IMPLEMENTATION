@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from . import inferance
+from . import inference
 
 app = Flask(__name__)
 
