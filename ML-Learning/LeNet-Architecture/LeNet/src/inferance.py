@@ -11,6 +11,7 @@ def load_checkpoint(filepath):
     model.eval()
     return model
 
+
 m = load_checkpoint("checkpoint.pth")
 # print(m["model_state_dict"])
 # print(m["best_accuracy"])
@@ -20,5 +21,7 @@ data = prepare_testset("img")
 pred = m(data[2::])
 predicted_class = np.argmax(pred.detach().numpy())
 print(predicted_class)
+
+
 def make_inference(model):
     pass
