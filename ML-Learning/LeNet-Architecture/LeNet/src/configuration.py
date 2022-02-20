@@ -1,9 +1,9 @@
 import torch
 
 
-def configure_device():
+def configure_device() -> torch.device:
     """
-    check if GPU is available and use it
+    check if GPU is available and use it else use CPU
     :return: device cuda or cpu
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -11,9 +11,9 @@ def configure_device():
     return device
 
 
-def hyperparameter():
+def hyperparameter() -> tuple:
     """
-    define hyper parameters
+    static configuration of hyperparameters
     :return: hyper parameters of type tuple
     """
     lr = 0.001
