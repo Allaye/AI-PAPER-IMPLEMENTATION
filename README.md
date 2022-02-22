@@ -6,6 +6,7 @@
 <!-- > _You might be interested in 🤖 [Interactive Machine Learning Experiments](https://github.com/Allaye/AI-PAPER-IMPLEMENTATION)_ -->
 
 <!-- _For Octave/MatLab version of this repository please check [machine-learning-octave](https://github.com/trekhleb/machine-learning-octave) project._ -->
+<!-- pip install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html -->
 
 > This repository contains examples of popular machine learning algorithms implemented in **Python** using pytorch
 
