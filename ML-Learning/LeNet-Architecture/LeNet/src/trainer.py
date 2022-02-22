@@ -4,9 +4,18 @@ from dataset_loader import prepare_dataset
 from configuration import hyperparameter, configure_device
 
 
-def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer):
+def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer) -> LeNet:
     """
     perform model training loop and hyperparameter tuning
+    :param model:
+    :param train_loader:
+    :param test_loader:
+    :param epochs:
+    :param loss_fn:
+    :param device:
+    :param batch_size:
+    :param optimizer:
+    :rtype: model trained and tuned
     """
     best_accuracy = 0
     n_total_steps = len(train_loader)
@@ -38,9 +47,14 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
     return model
 
 
-def model_eval(model, test_loader, device, batch_size):
+def model_eval(model, test_loader, device, batch_size) -> float:
     """
     perform model evaluation and testing using the test dataset
+    :param model:
+    :param test_loader:
+    :param device:
+    :param batch_size:
+    :return: accuracy of type float
     """
     # disengage the model from tracking the gradients
     with torch.no_grad():
@@ -77,7 +91,15 @@ def model_eval(model, test_loader, device, batch_size):
     return total_accuracy
 
 
-def save_checkpoint(model, epoch, optimizer, best_accuracy):
+def save_checkpoint(model, epoch, optimizer, best_accuracy) -> None:
+    """
+    save the trained model on each checkpoint
+    :param model:
+    :param epoch:
+    :param optimizer:
+    :param best_accuracy:
+    :return: None type
+    """
     check_point = {
         "epoch": epoch + 1,
         "model_state_dict": model.state_dict(),
