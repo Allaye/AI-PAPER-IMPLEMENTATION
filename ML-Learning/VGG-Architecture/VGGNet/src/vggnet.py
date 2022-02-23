@@ -5,7 +5,11 @@ from VGGNet.src.architecture import config
 
 
 class VGGNet(nn.Module):
-
+    """
+    implementation of the LeNet5 architecture as proposed by Yann Lecun and others,
+    see https://en.wikipedia.org/wiki/LeNet-5
+    this implementation is by no way an efficient implementation of the VGG architecture
+    """
     def __init__(self, architecture, num_classes=1000):
         super(VGGNet, self).__init__()
 
