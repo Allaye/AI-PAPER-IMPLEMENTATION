@@ -13,7 +13,7 @@ jobs:
       - uses: jasineri/gitartwork@v1
         with:
            # Use this username's contribution graph  
-           user_name: jasineri
+           user_name: allaye
            # Text on contribution graph 
            text: AI PAPERS IMPLEMENTATION
       - uses: jasineri/simple-push-action@v1
