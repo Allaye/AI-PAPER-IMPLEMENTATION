@@ -1,5 +1,5 @@
 # ML-DL-ALGO-PAPER-IMPLEMENTATION
-[![jasineri/gitartwork](gitartwork.svg)](https://github.com/jasineri/gitartwork)
+[![allaye/gitartwork](gitartwork.svg)](https://github.com/allaye/gitartwork)
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/allaye/AI-PAPER-IMPLEMENTATION/master?filepath=notebooks)
 [![Build Status](https://travis-ci.org/allaye/AI-PAPER-IMPLEMENTATION.svg?branch=master)](https://travis-ci.org/allaye/AI-PAPER-IMPLEMENTATION)
