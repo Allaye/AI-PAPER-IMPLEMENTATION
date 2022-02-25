@@ -41,3 +41,7 @@ class VGGNet(nn.Module):
             elif (layer == 'M'):
                 layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         return nn.Sequential(*layers)
+
+
+vgg = VGGNet(config['vgg16'])
+print(vgg)
