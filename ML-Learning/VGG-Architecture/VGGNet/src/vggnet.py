@@ -11,18 +11,18 @@ class VGGNet(nn.Module):
     this implementation is by no way an efficient implementation of the VGG architecture
     """
 
-    def __init__(self, architecture, in_channels=3, num_classes=1000):
+    def __init__(self, architecture, num_classes=1000):
         super(VGGNet, self).__init__()
-        self.in_channels = in_channels
         self.vgg_conv_layer = self.__make_convo_layers__(architecture)
-        nn.Linear(512, num_classes)
         self.fc_layer = nn.Sequential(nn.Linear(512 * 7 * 7, 4096), nn.ReLU(), nn.Dropout(0.5),
                                       nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
                                       nn.Linear(4096, num_classes))
 
-
     def forward(self, x):
-        pass
+        x = self.vgg_conv_layer(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc_layer(x)
+        return x
 
     @staticmethod
     def __make_convo_layers__(architecture) -> torch.nn.Sequential:
@@ -35,8 +35,8 @@ class VGGNet(nn.Module):
         for layer in architecture:
             if type(layer) == int:
                 out_channels = layer
-                # layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1), nn.ReLU()]
-                layers.append(nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU())
+                layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1), nn.ReLU()]
+                # layers.append([nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU()])
                 in_channels = layer
             elif (layer == 'M'):
                 layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
