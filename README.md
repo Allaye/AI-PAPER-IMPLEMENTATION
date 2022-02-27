@@ -9,7 +9,7 @@
 <!-- _For Octave/MatLab version of this repository please check [machine-learning-octave](https://github.com/trekhleb/machine-learning-octave) project._ -->
 <!-- pip install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html -->
 
-> This repository contains examples of popular machine learning algorithms implemented in **Python** using pytorch
+> This repository contains examples of popular machine learning algorithms implemented in **Python** using pytorch and other machine learning framework
 
 The purpose of this repository is _not_ to implement machine learning algorithms by using 3<sup>rd</sup> party library one-liners _but_ rather to practice implementing these algorithms from scratch and get better understanding of the mathematics behind each algorithm. That's why all algorithms implementations are called "homemade" and not intended to be used for production.
 
