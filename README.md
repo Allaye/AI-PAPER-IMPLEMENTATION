@@ -15,7 +15,7 @@ The purpose of this repository is _not_ to implement machine learning algorithms
 
 
 
-## Machine Learning Map
+## Machine Learning Map and others
 
 ![Machine Learning Map](images/machine-learning-map.png)
 
