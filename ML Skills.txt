@@ -1,4 +1,4 @@
-Skills Needed To Become A Machine Learning Engineer
+Skills Needed To Become A Good and Better Machine Learning Engineer
 Well to begin with, it definitely has to be the fundamentals and programming skills.
 
 You will require some basic knowledge on data structures such as stacks, queues, multi-dimensional arrays, trees, graphs and some basic algorithms like searching, sorting, optimization, dynamic programming etc.
