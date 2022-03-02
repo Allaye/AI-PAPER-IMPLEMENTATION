@@ -13,7 +13,7 @@ class VGGNet(nn.Module):
 
     def __init__(self, architecture, num_classes=1000):
         super(VGGNet, self).__init__()
-        self.vgg_conv_layer = self.__make_convo_layers__(architecture)
+        self.vgg_conv_layer = self._make_convo_layers(architecture)
         self.fc_layer = nn.Sequential(nn.Linear(512 * 7 * 7, 4096), nn.ReLU(), nn.Dropout(0.5),
                                       nn.Linear(4096, 4096), nn.ReLU(), nn.Dropout(0.5),
                                       nn.Linear(4096, num_classes))
@@ -25,7 +25,7 @@ class VGGNet(nn.Module):
         return x
 
     @staticmethod
-    def __make_convo_layers__(architecture) -> torch.nn.Sequential:
+    def _make_convo_layers(architecture) -> torch.nn.Sequential:
         """
         Create convolutional layers from the vgg architecture type passed in.
         :param architecture:
@@ -38,10 +38,16 @@ class VGGNet(nn.Module):
                 layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1), nn.ReLU()]
                 # layers.append([nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU()])
                 in_channels = layer
+            elif layer == 'LRN':
+                layers += [nn.LocalResponseNorm(5, alpha=0.0001, beta=0.75, k=1)]
             elif (layer == 'M'):
                 layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         return nn.Sequential(*layers)
 
 
-vgg = VGGNet(config['vgg16'])
-print(vgg)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
+vgg = VGGNet(config['vgg11-LRN']).to(device)
+x = torch.randn(1, 3, 224, 224).to(device)
+model = vgg(x).to(device)
+print(model.shape)
