@@ -38,16 +38,19 @@ class VGGNet(nn.Module):
                 layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1), nn.ReLU()]
                 # layers.append([nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU()])
                 in_channels = layer
-            elif layer == 'LRN':
+            elif (layer == 'Conv1-256'):
+                out_channels = 256
+                layers += [nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=1, stride=1), nn.ReLU()]
+            elif (layer == 'LRN'):
                 layers += [nn.LocalResponseNorm(5, alpha=0.0001, beta=0.75, k=1)]
             elif (layer == 'M'):
-                layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
+                layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         return nn.Sequential(*layers)
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
-vgg = VGGNet(config['vgg11-LRN']).to(device)
+vgg = VGGNet(config['vgg16-C1']).to(device)
 x = torch.randn(1, 3, 224, 224).to(device)
 model = vgg(x).to(device)
 print(model.shape)
