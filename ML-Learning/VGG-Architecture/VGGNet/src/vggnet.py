@@ -24,6 +24,14 @@ class VGGNet(nn.Module):
         x = self.fc_layer(x)
         return x
 
+    def loss_optimizer(self, lr=0.001, momentum=0.9) -> tuple:
+
+        loss_fn = nn.CrossEntropyLoss()
+        optimizer = torch.optim.SGD(self.parameters(), lr=lr, momentum=momentum)
+        return loss_fn, optimizer
+
+
+
     @staticmethod
     def _make_convo_layers(architecture) -> torch.nn.Sequential:
         """
