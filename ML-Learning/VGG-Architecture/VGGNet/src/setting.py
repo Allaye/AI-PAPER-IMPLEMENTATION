@@ -18,4 +18,5 @@ def hyperparameter() -> tuple:
     epochs = 50
     lr = 0.001
     batch_size = 64
-    return epochs, lr, batch_size
+    momentum = 0.9
+    return epochs, lr, batch_size, momentum
