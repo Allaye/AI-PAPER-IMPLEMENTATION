@@ -6,7 +6,7 @@ from torch.utils.data import (Dataset, DataLoader)
 from PIL import Image
 
 
-class CustomDatasetLoader(Dataset):
+class CustomDataLoader(Dataset):
     """
     A class to create a custom dataset, which is a subclass of torch.utils.data.Dataset
     and a data loader, which is a subclass of torch.utils.data.DataLoader
