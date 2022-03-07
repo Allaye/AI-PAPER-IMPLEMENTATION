@@ -9,10 +9,9 @@ def train(model, dataloader, hyperparameters, device):
     loss_fn, optimizer = model.loss_optimizer(lr, momentum)
 
     for epoch in range(epochs):
-        for i, (images, label) in enumerate(dataloader):
+        for i, (images, label) in enumerate(dataloader):  # image batches
             # move image operation to cuda
-            images = images.to(device)
-            label = label.to(device)
+            images, label = images.to(device), label.to(device)
 
             # perform a forward pass
             outputs = model(images)
@@ -22,6 +21,10 @@ def train(model, dataloader, hyperparameters, device):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            # print training statistics and other information
+            if (i+1) % 100 == 0:
+                print(f'Epoch [{epoch + 1}/{epochs}], Step [{i + 1}/{len(dataloader[0])}], Loss: {loss.item():.4f}')
 
 
 def eval_model(model, test_loader):
