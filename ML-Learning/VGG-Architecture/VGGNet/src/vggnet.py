@@ -62,6 +62,7 @@ class VGGNet(nn.Module):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
 vgg = VGGNet(config['vgg16-C1']).to(device)
+vgg.train()
 x = torch.randn(1, 3, 224, 224).to(device)
 model = vgg(x).to(device)
 print(model.shape)
