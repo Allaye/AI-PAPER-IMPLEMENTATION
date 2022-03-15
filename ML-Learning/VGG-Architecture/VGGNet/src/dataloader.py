@@ -56,25 +56,3 @@ class CustomDataset(Dataset):
         test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
         return train_loader, test_loader
 
-
-d_path = "C:\Python\Project\Personal\Python Project\Projects\Data\Algo-ML\dataset"
-print(os.listdir("C:\Python\Project\Personal\Python Project\Projects\Data\Algo-ML\dataset"))
-print(os.listdir(os.path.join(d_path, 'Orangutan')))
-imgpath = os.listdir(os.path.join(d_path, 'Orangutan'))
-print(os.path.join(d_path, 'Orangutan', '1.jpg'))
-
-data = CustomDataset(d_path, transform=[transforms.ToTensor(), transforms.Resize((224, 224))])
-print(data.classes)
-# print(data.allimagepaths)
-print(data.targets)
-# print(data.__getitem__(0))
-print(data.__len__())
-trainset, testset = data.getdataloader()
-
-print(trainset, testset)
-for i, (img, target) in enumerate(trainset):
-    print(i, img.shape, target)
-    if i != 1:
-        break
-cor = (0.8, 0.2)
-print([*cor])
