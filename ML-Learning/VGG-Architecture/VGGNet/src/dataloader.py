@@ -51,8 +51,8 @@ class CustomDataset(Dataset):
         :return:
         """
 
-        train_set, test_set = torch.utils.data.random_split(self, [round(0.8 * len(self)), round(0.2 * self.__len__())])
+        train_set, validation_set = torch.utils.data.random_split(self, [round(0.8 * len(self)), round(0.2 * self.__len__())])
         train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-        test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-        return train_loader, test_loader
+        validation_loader = DataLoader(dataset=validation_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+        return train_loader, validation_loader
 

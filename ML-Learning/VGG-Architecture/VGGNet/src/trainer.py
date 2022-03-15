@@ -9,44 +9,44 @@ from setting import *
 def training(model, dataloader, hyperparameters, device):
     epochs, lr, batch_size, momentum = hyperparameters
     loss_fn, optimizer = model.loss_optimizer(lr, momentum)
-    running_loss = 0.0
+    training_loss = 0.0
     last_loss = 0.0
     for epoch in range(epochs):
         model.train(True)
         print('training')
-        for images, label in dataloader:  # image b
+        for index, (images, label) in enumerate(dataloader[0]):  # image b
             # move image operation to cuda
             images = images.to(device)
             label = label.to(device)
-
-            # perform a forward pass
-            outputs = model(images).to(device)
-            # compute the loss values
-            loss = loss_fn(outputs, label)
             # clear the gradient values and perform a backward and optimization step
             optimizer.zero_grad()
+            # perform a forward pass
+            outputs = model(images).to(device)
+            # compute the loss values, perform a backward pass and update the weights/optimizer and record the loss value
+            loss = loss_fn(outputs, label)
             loss.backward()
             optimizer.step()
-            running_loss += loss.item()
+            training_loss += loss.item()
             # print training statistics and other information
+            if index % 100 == 99:
+                print(
+                    f'Training Info: Epoch [{epoch + 1}/{epochs}], Step [{index + 1}/{len(dataloader)}] Avg_training_loss: {training_loss / 100:.4f}')
+        eval_model(model, dataloader[1], device, loss_fn)
 
-        # eval_model(model, dataloader[1], device, batch_size)
 
-
-def eval_model(model, test_loader, device, batch_size, loss_fn=None):
+def eval_model(model, test_loader, device, loss_fn=None):
     model.eval()
     correct = 0
     total_loss = 0
+    validation_loss = 0.0
     with torch.no_grad():
         for images, labels in test_loader:
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = loss_fn(outputs, labels)
-
-            _, predicted = torch.max(outputs.data, 1)
-            total_loss += labels.size(0)
-            correct += (predicted == labels).sum().item()
-        print(f'Accuracy of the network on the 10000 test images: {100 * correct / total_loss} %')
+            validation_loss += loss.item()
+        avg_val_loss = validation_loss / len(test_loader)
+        print(f'Validation Info: Avg_validation_loss: {avg_val_loss:.4f}')
 
 
 def save_model(model, epoch):
@@ -60,7 +60,7 @@ from architecture import config
 d_path = "C:\Python\Project\Personal\Python Project\Projects\Data\Algo-ML\dataset"
 
 data = CustomDataset(d_path, transform=[transforms.ToTensor(), transforms.Resize((224, 224))])
-trainset, testset = data.getdataloader()
+dataset = data.getdataloader()
 
 # training(m, trainset, hyper, device)
 torch.cuda.empty_cache()
@@ -69,7 +69,6 @@ print(dev)
 vgg = VGGNet(config['vgg16-C1']).to(dev)
 # vgg.train(True)
 # x = torch.randn(1, 3, 224, 224).to(device)
-
 hyper = hyperparameter()
 
-training(vgg, trainset, hyper, dev)
+training(vgg, dataset, hyper, dev)
