@@ -1,7 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from VGGNet.src.architecture import config
+from torchvision.transforms import transforms
+
+from src.architecture import config
+from src.dataloader import CustomDataset
 
 
 class VGGNet(nn.Module):
@@ -19,8 +22,12 @@ class VGGNet(nn.Module):
                                       nn.Linear(4096, num_classes))
 
     def forward(self, x):
+        print('shape', x.shape)
         x = self.vgg_conv_layer(x)
-        x = x.view(x.size(0), -1)
+        print('old shape', x.shape)
+        # x = x.flatten()
+        x = x.reshape(x.shape[0], -1)
+        print('new shape', x.shape)
         x = self.fc_layer(x)
         return x
 
@@ -59,10 +66,22 @@ class VGGNet(nn.Module):
         return nn.Sequential(*layers)
 
 
+d_path = "C:\Python\Project\Personal\Python Project\Projects\Data\Algo-ML\dataset"
+
+data = CustomDataset(d_path, transform=[transforms.ToTensor(), transforms.Resize((224, 224))])
+
+trainset, testset = data.getdataloader()
+for i, j in trainset:
+    a = i
+    print(a.shape)
+    break
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
 vgg = VGGNet(config['vgg16-C1']).to(device)
-vgg.train()
+vgg.train(True)
 x = torch.randn(1, 3, 224, 224).to(device)
-model = vgg(x).to(device)
+print(a.shape)
+a = a.to(device)
+model = vgg(a).to(device)
+
 print(model.shape)
