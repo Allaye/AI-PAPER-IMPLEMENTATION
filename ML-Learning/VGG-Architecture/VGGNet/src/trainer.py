@@ -56,7 +56,7 @@ def eval_model(model, test_loader, device, loss_fn=None):
             total_correct += (predicted == labels).sum().item()
             # total_correct += predicted.eq(labels).sum().item()
             # total_correct = total_correct + (predicted == labels).sum().item()
-            
+
         avg_val_loss = validation_loss / len(test_loader)
         print(f'Validation Info: Avg_validation_loss: {avg_val_loss:.4f} Validation_loss: {validation_loss:.4f}')
 
