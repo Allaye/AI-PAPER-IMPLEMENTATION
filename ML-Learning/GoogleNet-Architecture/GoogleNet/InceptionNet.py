@@ -11,9 +11,8 @@ class ConvBlock(nn.Module):
         self.relu = nn.ReLU()
 
     def forward(self, x):
-        x = self.conv(x)
-        x = self.bn(x)
-        x = self.prelu(x)
+        return self.relu(self.bn(self.conv(x)))
+
 
 
 class InceptionNet(nn.Module):
