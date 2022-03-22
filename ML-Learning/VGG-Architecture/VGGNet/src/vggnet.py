@@ -9,6 +9,19 @@ from src.dataloader import CustomDataset
 
 class VGGNet(nn.Module):
     """
+    With ConvNets becoming more of a commodity in the computer vision field,
+    a number of attempts have been made to improve the original architecture
+    of Krizhevsky et al. (2012) in a bid to achieve better accuracy.
+    For instance, the best-performing submissions to the ILSVRC-2013 utilised
+    smaller receptive window size and smaller stride of the first convolutional
+    layer. Another line of improvements dealt with training and testing the
+    networks densely over the whole image and over multiple scales.
+    In this paper, we address another important aspect of ConvNet architecture
+    design – its depth. To this end, we fix other parameters of the architecture,
+    and steadily increase the depth of the network by adding more convolutional
+    layers, which is feasible due to the use of very small (3 × 3) convolution
+    filters in all layers.
+
     implementation of the VGG architecture as proposed by Karen Simonyan, Andrew Zisserman,
     see https://paperswithcode.com/paper/very-deep-convolutional-networks-for-large
     this implementation is by no way an efficient implementation of the VGG architecture
