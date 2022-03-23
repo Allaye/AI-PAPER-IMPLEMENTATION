@@ -14,6 +14,5 @@ class ConvBlock(nn.Module):
         return self.relu(self.bn(self.conv(x)))
 
 
-
 class InceptionNet(nn.Module):
     pass
