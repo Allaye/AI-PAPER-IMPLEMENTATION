@@ -29,6 +29,11 @@ class InceptionNet(nn.Module):
             ConvBlock(in_channels, in_1x1pool, kernel_size=1, padding='same'))
 
     def forward(self, x):
-        pass
+        return torch.cat([
+            self.incep_1(x),
+            self.incep_3(x),
+            self.incep_5(x),
+            self.incep_1pool(x)
+        ], 1)
 
 
