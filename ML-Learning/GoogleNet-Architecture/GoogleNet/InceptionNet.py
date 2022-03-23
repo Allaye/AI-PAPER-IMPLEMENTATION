@@ -15,4 +15,13 @@ class ConvBlock(nn.Module):
 
 
 class InceptionNet(nn.Module):
-    pass
+    def __init__(self, in_channels, in_1x1, in_3x3reduce, in_3x3, in_5x5reduce, in_5x5, in_1x1pool):
+        super(InceptionNet, self).__init__()
+        self.incep_1 = ConvBlock(in_channels, in_1x1, kernel_size=1, padding='same')
+        self.incep_3 = nn.Sequential(
+            ConvBlock(in_channels, in_3x3reduce, kernel_size=1, padding='same'),
+            ConvBlock(in_3x3reduce, in_3x3, kernel_size=3, padding='same'))
+        self.incep_5 = nn.Sequential(
+            ConvBlock(in_channels, in_5x5reduce, kernel_size=1, padding='same'),
+            ConvBlock(in_5x5reduce, in_5x5, kernel_size=5, padding='same'))
+
