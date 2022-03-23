@@ -24,4 +24,11 @@ class InceptionNet(nn.Module):
         self.incep_5 = nn.Sequential(
             ConvBlock(in_channels, in_5x5reduce, kernel_size=1, padding='same'),
             ConvBlock(in_5x5reduce, in_5x5, kernel_size=5, padding='same'))
+        self.incep_1pool = nn.Sequential(
+            nn.MaxPool2d(kernel_size=3, stride=1, padding='same'),
+            ConvBlock(in_channels, in_1x1pool, kernel_size=1, padding='same'))
+
+    def forward(self, x):
+        pass
+
 
