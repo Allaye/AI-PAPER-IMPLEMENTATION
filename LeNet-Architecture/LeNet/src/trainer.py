@@ -104,7 +104,6 @@ if __name__ == "__main__":
     # load dataset
     print("loading training set")
     train_loader, test_loader, classes = prepare_dataset(batch_size)
-    print(type(train_loader) == DataLoader, type(test_loader) == Dataset, type(classes))
 
     # configure device
     print("configure device")
@@ -113,14 +112,11 @@ if __name__ == "__main__":
     # instantiate the model
     print("instantiate model")
     model = LeNet().to(device)
-    print(type(model) == LeNet)
 
     # define loss and optimizer
     print("optimizing model")
     loss_fn, optimizer = model.loss_optimizer(lr=learning_rate)
-    print(type(loss_fn), type(optimizer))
-# torch.optim
-# torch.nn.modules.loss
+
     # train the model
     print("running the training function")
     train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer)
