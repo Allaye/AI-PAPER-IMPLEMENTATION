@@ -156,7 +156,11 @@ cifar-10-python.tar.gz
 /LeNet-Architecture/LeNet/src/img/
 /LeNet-Architecture/LeNet/src/cifar-10-python.tar.gz
 /LeNet-Architecture/venvlenet/
+/LeNet-Architecture/LeNet/src/data
+/LeNet-Architecture/LeNet/src/data/*
+/LeNet-Architecture/LeNet/src/models/*
 *.venv/
 
 #datasets
 /dataset
+/data
