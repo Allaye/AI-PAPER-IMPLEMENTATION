@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision
 
 
 class LeNet(nn.Module):
@@ -17,21 +18,21 @@ class LeNet(nn.Module):
         :param self: class instance
         :rtype: None
         """
-        super().__init__()
-        self.conv1 = nn.Conv2d(1, 6, 5, 1)
+        super(LeNet, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1, padding=0)
         self.conv2 = nn.Conv2d(6, 16, 5, 1)
         self.conv3 = nn.Conv2d(16, 120, 5, 1)
-        self.pool = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(120, 84)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.fc1 = nn.Linear(in_features=120, out_features=84)
         self.fc2 = nn.Linear(84, 10)
 
-    def forward(self, x) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         pass the input through the network, in their respective layers and order and return the output
         :param x: input
         :rtype: torch.Tensor
         """
-        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(input=self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = F.relu(self.conv3(x))
         x = x.reshape(x.shape[0], -1)  # x.reshape[0], -1 flatten the output of the convolutional layers

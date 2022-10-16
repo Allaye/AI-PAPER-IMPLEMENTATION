@@ -20,8 +20,8 @@ def load_checkpoint(filepath) -> LeNet:
 def make_inference(test_set, modelpath="./models/checkpoint18.pth") -> torch.Tensor:
     """
     make inference on test set
-    :param test_set:
     :param modelpath:
+    :param test_set:
     :return: numpy array of predictions
     """
     batch_data, classes = prepare_testset(test_set)
