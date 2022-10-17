@@ -25,6 +25,6 @@ def save_checkpoint(model, epoch, optimizer, best_accuracy) -> None:
         "optimizer_state_dict": optimizer.state_dict(),
         "best_accuracy": best_accuracy
     }
-    torch.save(check_point, f"/models/checkpoint{epoch}.pth")
+    torch.save(check_point, f"./models/checkpoint{epoch}.pth")
     print(f"checkpoint successfully saved at epoch {epoch}")
     return None
