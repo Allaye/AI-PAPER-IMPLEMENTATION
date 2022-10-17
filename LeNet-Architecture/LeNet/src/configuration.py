@@ -13,7 +13,7 @@ def configure_device() -> torch.device:
 
 def hyperparameter() -> tuple:
     """
-    static configuration of hyperparameters
+    static configuration of hyper parameters
     :return: hyper parameters of type tuple
     """
     lr = 0.001
