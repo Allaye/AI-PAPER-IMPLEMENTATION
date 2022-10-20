@@ -11,7 +11,7 @@ def plot_image(image):
     return None
 
 
-def save_checkpoint(model, epoch, optimizer, best_accuracy) -> None:
+def saveCheckpoint(model, epoch, optimizer, best_accuracy) -> None:
     """
     save the trained model on each checkpoint
     :param model:

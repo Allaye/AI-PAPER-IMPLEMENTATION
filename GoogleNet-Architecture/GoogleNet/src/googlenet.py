@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from InceptionNet import InceptionBlock, ConvBlock
+from inceptionnet import InceptionBlock, ConvBlock
 
 
 class GoogleNet(nn.Module):
