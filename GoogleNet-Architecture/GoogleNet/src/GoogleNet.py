@@ -46,6 +46,18 @@ class GoogleNet(nn.Module):
         x = self.dropout(x.reshape(x.shape[0], -1)) # flatten the tensor and push it into the dropout
         return self.fc1(x)
 
+    def loss_optimizer(self, lr=0.001) -> tuple:
+        """
+        define the loss and optimizer
+        :param lr: learning rate
+        :rtype: tuple of torch.nn.CrossEntropyLoss and torch.optim.SGD
+        """
+        # define the loss function
+        loss_fn = nn.CrossEntropyLoss()
+        # define the optimizer
+        optimizer = torch.optim.Adam(self.parameters(), lr)
+        return loss_fn, optimizer
+
 
 data = torch.randn(3, 3, 224, 224)
 model = GoogleNet()
