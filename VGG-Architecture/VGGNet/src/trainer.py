@@ -31,7 +31,7 @@ def training(model: VGGNet, dataloader, hyperparameters, device):
             optimizer.step()
             training_loss += loss.item() * images.size(0)
             # print training statistics and other information
-            if index % 100 == 99:
+            if index % 100 == 0:
                 print(
                     f'Training Info: Epoch [{epoch + 1}/{epochs}], Step [{index + 1}/{len(dataloader[0])}] Avg_training_loss: {loss.item():.4f}')
         training_loss = training_loss / len(dataloader[0])
