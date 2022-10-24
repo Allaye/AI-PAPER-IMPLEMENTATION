@@ -1,53 +1,58 @@
 import os
 import torch
-from torch.utils.data import Dataset, DataLoader
 import torchvision
 import torchvision.transforms as transforms
+from torch.utils.data import Dataset, DataLoader
+from PIL import Image
 
 
-class PrepareDataset:
-    def __init__(self, batch_size=5):
-        self.batch_size = batch_size
+class CustomDataLoader(Dataset):
+    """
+    A class to create a custom dataset, which is a subclass of torch.utils.data.Dataset
+    and a data loader, which is a subclass of torch.utils.data.DataLoader
+    """
 
-    def prepare_dataset(self) -> tuple:
+    def __init__(self, data_path, transform=None):
+        self.data_path = data_path
+        self.transform = transforms.Compose(transform)
+        self.classes = sorted(os.listdir(data_path))
+        self.allimagepaths = []
+        self.targets = []
+
+        for target, classname in enumerate(self.classes):
+            for img in os.listdir(os.path.join(data_path, classname)):
+                self.allimagepaths.append(os.path.join(data_path, classname, img))
+                self.targets.append(target)
+
+    def __getitem__(self, index):
         """
-        get the CIFAR10 dataset, transform it to tensor, convert it into grayscale and normalize it
-        return a trainloader, testloader and data classes
-        :param batch_size: batch size that the dataset will be loaded in
-        :rtype: tuple: contains the trainloader, testloader and data classes
+        override the __getitem__ method to return the data sample
         """
-        # CIFAR10 dataset
+        imagepath = self.allimagepaths[index]
+        image = Image.open(imagepath).convert('RGB')
+        if self.transform is not None:
+            image = self.transform(image)
+        target = self.targets[index]
+        return (image, target)
 
-        train_dataset = torchvision.datasets.CIFAR10(root='./data/', train=True,
-                                                     transform=transforms.Compose(
-                                                         [transforms.ToTensor(), transforms.Grayscale()]),
-                                                     download=True)
-        test_dataset = torchvision.datasets.CIFAR10(root='./data/', train=False, transform=transforms.Compose(
-            [transforms.ToTensor(), transforms.Grayscale()]))
+    def __len__(self):
+        """
+        override the __len__ method to return the number of data samples
+        """
+        return len(self.allimagepaths)
 
-        # Data loader
-        train_loader = DataLoader(dataset=train_dataset, batch_size=self.batch_size, shuffle=True)
+    def getdataloader(self, batch_size=5, split_size=(0.8, 0.2), shuffle=True, num_workers=0):
+        """
+        create a customizable data loader, with the able of been iterable and reshuffle
+        :param split_size:
+        :param batch_size:
+        :param shuffle:
+        :param num_workers:
+        :return:
+        """
 
-        test_loader = DataLoader(dataset=test_dataset, batch_size=self.batch_size, shuffle=False)
+        train_set, validation_set = torch.utils.data.random_split(self, [round(0.8 * len(self)), round(0.2 * self.__len__())])
+        train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+        validation_loader = DataLoader(dataset=validation_set, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+        return train_loader, validation_loader
 
-        classes = ('plane', 'car', 'bird', 'cat',
-                   'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
-        return train_loader, test_loader, classes
-
-    # def prepare_testset(imagepath, ext=(".jpg", ".png", ".jpeg")) -> tuple: """ prepare dataset to use for normal
-    # testing, this function accepts a path to the file and the extension of the file and return a tensor of the
-    # image in batch form and classes :param imagepath: path to the image :param ext: extension of the image :rtype:
-    # tuple: contains the tensor of the images in batches and their respective classes """ # get the image filenames
-    # = [] for file in os.scandir(imagepath):
-    #
-    #         if file.is_file() and file.name.endswith(ext):
-    #             filenames.append(file.path)
-    #     batch_size = len(filenames)
-    #     batches = torch.zeros(batch_size, 1, 32, 32, dtype=torch.float)
-    #     for i, filename in enumerate(filenames):
-    #         batches[i] = transforms.Compose([transforms.Resize((32, 32)), transforms.Grayscale()])(
-    #             torchvision.io.read_image(filename))
-    #     classes = ('plane', 'car', 'bird', 'cat',
-    #                'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-    #     return batches, classes
