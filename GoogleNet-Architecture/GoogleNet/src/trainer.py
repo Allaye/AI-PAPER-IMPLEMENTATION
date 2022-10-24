@@ -1,5 +1,6 @@
 import torch
-from dataloader import PrepareDataset
+from dataloader import CustomDataLoader
+from torchvision.transforms import transforms
 from googlenet import GoogleNet
 from configuration import configureDevice, hyperParameter
 from utils import saveCheckpoint
@@ -19,7 +20,7 @@ class TrainerEvaluation:
         best_accuracy = 0
         n_total_steps = len(self.trainLoader)
         print(f"Model Training Starting...")
-        for epoch in range(self.hyperParameters.epochs):
+        for epoch in range(self.hyperParameters.get('epochs')):
             self.model.train()
             for i, (images, labels) in enumerate(self.trainLoader):
                 # move tensors to appropriate device
@@ -54,10 +55,9 @@ class TrainerEvaluation:
         self.model.eval()
         with torch.inference_mode():
             # initialize variables
-            total_correct = 0
+            validation_loss = 0.0
             total_sample = 0
-            n_class_correct = [0 for i in range(10)]
-            n_class_sample = [0 for i in range(10)]
+            total_correct = 0
             # loop over the test set
             for images, labels in self.testLoader:
                 # move tensors to the configured device
@@ -67,23 +67,27 @@ class TrainerEvaluation:
                 # perform a forward pass
                 outputs = self.model(images)
 
-                # calculate the model correct predictions
+                # calculate the model prediction and metrics
+                validation_loss += self.lossFN(outputs, labels).item()
                 _, prediction = torch.max(outputs.data, 1)
                 total_sample = total_sample + labels.size(0)
                 total_correct = total_correct + (prediction == labels).sum().item()
-                for i in range(self.hyperParameters.get('batch_size')):
-                    label = labels[i]
-                    pred = prediction[i]
-                    if label == pred:
-                        n_class_correct[label] = n_class_correct[label] + 1
-                    n_class_sample[label] = n_class_sample[label] + 1
-            total_accuracy = 100.0 * total_correct / total_sample
-            print('accuracy of the network on the 10000 test images: {} %'.format(total_accuracy))
 
-            for i in range(10):
-                class_accuracy = 100.0 * n_class_correct[i] / n_class_sample[i]
-                print('accuracy is {} class: {} %'.format(i, class_accuracy))
-        return total_accuracy
+            average_validation_loss = validation_loss / len(self.testLoader)
+            print(f'Validation Info: Avg_validation_loss: {average_validation_loss:.4f} Validation_loss: {validation_loss:.4f}')
 
     def train_evaluate(self):
         pass
+
+
+if __name__ == "__main__":
+    hyperParameter = hyperParameter()
+    config = configureDevice()
+    hyperParameter.update(config)
+    d_path = "./data/dataset"
+    data = CustomDataLoader(d_path, transform=[transforms.ToTensor(), transforms.Resize((224, 224))])
+    trainDataloader, testDataloader  = data.getdataloader()
+    print(hyperParameter)
+    loss, optimizer = GoogleNet().loss_optimizer()
+    te = TrainerEvaluation(model=GoogleNet(), trainDataloader=trainDataloader, testDataloader=testDataloader, lossFn=loss, optimizer=optimizer, hyperParameters=hyperParameter)
+    te.train()
