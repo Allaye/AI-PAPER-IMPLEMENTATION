@@ -41,7 +41,7 @@ class TrainerEvaluation:
                 # print training statistics and other information
                 if (i + 1) % 100 == 0:
                     print(
-                        f'Epoch [{epoch + 1}/{self.hyperParameters.epochs}], Step [{i + 1}/{n_total_steps}], Loss: {loss.item():.4f}')
+                        f'Epoch [{epoch + 1}/{self.hyperParameters.get("epochs")}], Step [{i + 1}/{n_total_steps}], Loss: {loss.item():.4f}')
 
                 # perform model evaluation and testing
                 test_accuracy = self.evaluate()
@@ -75,6 +75,7 @@ class TrainerEvaluation:
 
             average_validation_loss = validation_loss / len(self.testLoader)
             print(f'Validation Info: Avg_validation_loss: {average_validation_loss:.4f} Validation_loss: {validation_loss:.4f}')
+            return 100 * total_correct / total_sample
 
     def train_evaluate(self):
         pass
