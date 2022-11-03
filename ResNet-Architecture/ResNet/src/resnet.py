@@ -2,7 +2,7 @@
 """
 From scratch implementation of the ResNet architecture.
 
-Developed by Kolade Gideon (Allaye) <aladdin.persson at hotmail dot com>
+Developed by Kolade Gideon (Allaye) <allaye.nothing dot com>
 *
 """
 from typing import List, Dict
