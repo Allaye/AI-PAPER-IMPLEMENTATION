@@ -6,22 +6,22 @@ Author: Kolade Gideon (Allaye) <no_email_yet>
 """
 config = {
     "res18": [{
-            "conv": [[3, 1, 0, 64], [3, 1, 0, 64]],
+            "conv": [[3, 1, 0, 64, 64], [3, 1, 0, 64, 64]],
             "iteration": 2,
             "convolutional_block": False
         },
         {
-            "conv": [[3, 1, 0, 128], [3, 1, 0, 128]],
+            "conv": [[3, 1, 0, 64, 128], [3, 1, 0, 128, 128]],
             "iteration": 2,
             "convolutional_block": False
         },
         {
-            "conv": [[3, 1, 0, 256], [3, 1, 0, 256]],
+            "conv": [[3, 1, 0, 128, 256], [3, 1, 0, 256, 256]],
             "iteration": 2,
             "convolutional_block": False
         },
         {
-            "conv": [[3, 1, 0, 512], [3, 1, 0, 512]],
+            "conv": [[3, 1, 0, 256, 512], [3, 1, 0, 512, 512]],
             "iteration": 2,
             "convolutional_block": False
         }
@@ -48,12 +48,12 @@ config = {
         }
     ],
     "res50": [{
-        "conv": [[1, 64], [3, 64], [1, 256]],
+        "conv": [[1, 1, 0, 64, 64], [3, 1, 1, 64, 64], [1, 1, 0, 64, 256]],
         "iteration": 3,
         "convolutional_block": False
     },
         {
-            "conv": [[1, 128], [3, 128], [1, 512]],
+            "conv": [[1, 2, 1, 128], [3, 1, 1, 128], [1, 1, 1, 512]],
             "iteration": 4,
             "convolutional_block": True
         },
