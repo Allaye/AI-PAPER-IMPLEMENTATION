@@ -46,7 +46,8 @@ class ResidualBlock(nn.Module):
         # for i in range(architecture[0]['iteration']):
         for conv in architecture:  # [3, 1, 0, 128, 256]
             layers.append(
-                [nn.Conv2d(self.in_channels or conv[3], conv[4], kernel_size=conv[0], stride=conv[1], padding='same'),
+                [nn.Conv2d(self.in_channels or conv[3], out_channels=conv[4], kernel_size=conv[0], stride=conv[1],
+                           padding=conv[2]),
                  nn.BatchNorm2d(conv[4])])
             self.in_channels = conv[4]
         return layers

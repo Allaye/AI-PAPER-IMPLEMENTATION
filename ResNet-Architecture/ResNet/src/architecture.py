@@ -53,12 +53,12 @@ config = {
         "convolutional_block": False
     },
         {
-            "conv": [[1, 2, 1, 128], [3, 1, 1, 128], [1, 1, 1, 512]],
+            "conv": [[1, 2, 1, 128], [3, 2, 1, 128], [1, 2, 1, 512]],
             "iteration": 4,
             "convolutional_block": True
         },
         {
-            "conv": [[1, 256], [3, 256], [1, 1024]],
+            "conv": [[1, 2, 1,  256], [3, 256], [1, 1024]],
             "iteration": 6,
             "convolutional_block": True
         },
