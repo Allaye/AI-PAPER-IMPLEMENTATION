@@ -41,11 +41,12 @@ class ResNet(nn.Module):
         """
         all_layers = []
         layers = []
+        identity_block = None
         for layer in architecture:
             # identity_block = None
             if self.should_make_identity_block(layer):
                 print('identity block kicks in>>>>>')
-            identity_block = self._make_identity_block(out=layer.get('conv')[-1][-1],)
+                identity_block = self._make_identity_block(out=layer.get('conv')[-1][-1],)
             for _ in range(layer.get("iteration")):
                 layers.append(RB(layer.get("conv"), identity_block))
                 # identity_block = None
@@ -76,9 +77,10 @@ class ResNet(nn.Module):
 
 
 data = torch.randn(4, 3, 224, 224)
-model = ResNet(3, config.get("res18"))
+model = ResNet(3, config.get("res50"))
 # print('model', model)
 print('nodel size', model(data).size())
 
 
-# RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[4, 1, 224, 224] to have 3 channels, but got 1 channels instead
+# RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[4, 1, 224, 224] to have 3 channels,
+# but got 1 channels instead
