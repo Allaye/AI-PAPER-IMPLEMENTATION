@@ -29,28 +29,50 @@ q = [{
 class ResidualBlock(nn.Module):
     def __init__(self, architecture: List, identity=None):
         super(ResidualBlock, self).__init__()
+        self.channel_expansion = 4
         # self.architecture = architecture
         self.identity_block = identity
         # self.layers1, self.layers2 = self.__make_layer(architecture)
         # print('layers', self.layers2, self.layers1)
         self.layers = self.__make_layer(architecture)
 
-    def __make_layer(self, architecture) -> List[List[nn.Module]]:
+    def __make_layer(self, architecture) -> List:
         """
         :param architecture: Dict
         :return: List[List[nn.Module]]
-        a factory to create the layers of the residual block
+        a factory method to create the layers of the residual block
         """
-        layers = []
-        self.in_channels = None
         # for i in range(architecture[0]['iteration']):
-        for conv in architecture:  # [3, 1, 0, 128, 256]
-            layers.append(
-                [nn.Conv2d(self.in_channels or conv[3], out_channels=conv[4], kernel_size=conv[0], stride=conv[1],
-                           padding=conv[2]),
-                 nn.BatchNorm2d(conv[4])])
-            self.in_channels = conv[4]
-        return layers
+        # if the architecture type is type a then we create a 2 block convo self 3.
+        spun_up_block = self.__spinup_2_block() if architecture[0] == 2 else self.__spinup_3_block(architecture[1], architecture[2])
+        return spun_up_block
+
+        # for conv in architecture:  # [3, 1, 0, 128, 256]
+        #     layers.append(
+        #         [nn.Conv2d(self.in_channels or conv[3], out_channels=conv[4], kernel_size=conv[0], stride=conv[1],
+        #                    padding=conv[2]),
+        #          nn.BatchNorm2d(conv[4])])
+        #     self.in_channels = conv[4]
+        # return layers
+
+    def __spinup_2_block(self):
+        return []
+
+    def __spinup_3_block(self, channel, stride):
+        conv1 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=1, stride=1,
+                               padding=0, bias=False)
+        bn1 = nn.BatchNorm2d(channel)
+        conv2 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, stride=stride,
+                               padding=1, bias=False)
+        bn2 = nn.BatchNorm2d(channel)
+        conv3 = nn.Conv2d(channel, channel * self.channel_expansion, kernel_size=1, stride=1,
+                               padding=0, bias=False)
+        bn3 = nn.BatchNorm2d(channel * self.channel_expansion)
+        relu = nn.ReLU()
+        return [conv1, bn1, conv2, bn2, conv3, bn3, relu]
+
+
+
 
     def forward(self, x: torch.Tensor):
         identity = x.clone()
