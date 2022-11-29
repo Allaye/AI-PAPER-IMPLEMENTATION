@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple, Union, Any
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -29,14 +29,17 @@ q = [{
 class ResidualBlock(nn.Module):
     def __init__(self, architecture: List, identity=None):
         super(ResidualBlock, self).__init__()
+        # this is the final output channel for each convo block,
+        # which is the normal input_channel * 4
         self.channel_expansion = 4
-        # self.architecture = architecture
+        # identity operation on the conv block if required
         self.identity_block = identity
-        # self.layers1, self.layers2 = self.__make_layer(architecture)
-        # print('layers', self.layers2, self.layers1)
-        self.layers = self.__make_layer(architecture)
+        # get the conv block and other params
+        self.conv, self.bn = self.__make_layer(architecture)
+        # relu value
+        self.relu = nn.ReLU()
 
-    def __make_layer(self, architecture) -> List:
+    def __make_layer(self, architecture) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
         """
         :param architecture: Dict
         :return: List[List[nn.Module]]
@@ -44,7 +47,8 @@ class ResidualBlock(nn.Module):
         """
         # for i in range(architecture[0]['iteration']):
         # if the architecture type is type a then we create a 2 block convo self 3.
-        spun_up_block = self.__spinup_2_block() if architecture[0] == 2 else self.__spinup_3_block(architecture[1], architecture[2])
+        spun_up_block = self.__spinup_2_block() if architecture[0] == 2 else self.__spinup_3_block(architecture[1],
+                                                                                                   architecture[2])
         return spun_up_block
 
         # for conv in architecture:  # [3, 1, 0, 128, 256]
@@ -58,50 +62,30 @@ class ResidualBlock(nn.Module):
     def __spinup_2_block(self):
         return []
 
-    def __spinup_3_block(self, channel, stride):
+    def __spinup_3_block(self, channel, stride) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
         conv1 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=1, stride=1,
-                               padding=0, bias=False)
+                          padding=0, bias=False)
         bn1 = nn.BatchNorm2d(channel)
         conv2 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, stride=stride,
-                               padding=1, bias=False)
+                          padding=1, bias=False)
         bn2 = nn.BatchNorm2d(channel)
         conv3 = nn.Conv2d(channel, channel * self.channel_expansion, kernel_size=1, stride=1,
-                               padding=0, bias=False)
+                          padding=0, bias=False)
         bn3 = nn.BatchNorm2d(channel * self.channel_expansion)
-        relu = nn.ReLU()
-        return [conv1, bn1, conv2, bn2, conv3, bn3, relu]
+        return [conv1, conv2, conv3, ], [bn1, bn2, bn3]
 
-
-
-
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         identity = x.clone()
-        deep = len(self.layers)
-        print("shape before pass through", identity.shape)
-        for layer in self.layers:
-            deep -= 1
-            print(f"convo: {deep}")
-            if deep > 0:
-                print("layer", layer)
-                x = F.relu(layer[1](layer[0](x)))
-                print('shape after pass through', x.shape)
-            if deep == 0:
-                print("layer", layer)
-                x = layer[1](layer[0](x))
-
-                if identity.shape != x.shape:
-                    print("identity shape inside pass through", identity.shape)
-                    print("x shape inside pass through", x.shape)
-                    identity = self.identity_block(identity)
-                    print('pass through identity block', identity.shape)
-        print('x shape', x.shape)
-        print('identity shape', identity.shape)
-        return F.relu(x + identity)
-
-    def _require_same_padding(self):
-        """
-        Perform same padding/zero padding to preserve the image out
-        """
+        length = len(self.conv)
+        for item in zip(self.conv, self.bn):
+            length -= 1
+            if length != 0:
+                x = self.relu(item[1](item[0](x)))
+            else:
+                x = item[1](item[0](x))
+        if self.identity_block is not None:
+            identity = self.identity_block(identity)
+        return self.relu(x + identity)
 
 
 # model = nn.Sequential(nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), nn.BatchNorm2d(64), nn.ReLU())
