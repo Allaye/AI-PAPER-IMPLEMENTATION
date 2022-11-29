@@ -27,7 +27,7 @@ q = [{
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, architecture: List, identity=None):
+    def __init__(self, architecture: List[int], identity=None):
         super(ResidualBlock, self).__init__()
         # this is the final output channel for each convo block,
         # which is the normal input_channel * 4
@@ -39,11 +39,11 @@ class ResidualBlock(nn.Module):
         # relu value
         self.relu = nn.ReLU()
 
-    def __make_layer(self, architecture) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
+    def __make_layer(self, architecture: List[int]) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
         """
         :param architecture: Dict
         :return: List[List[nn.Module]]
-        a factory method to create the layers of the residual block
+        a factory method to create the layers of the residual block.
         """
         # for i in range(architecture[0]['iteration']):
         # if the architecture type is type a then we create a 2 block convo self 3.
