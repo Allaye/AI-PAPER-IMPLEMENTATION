@@ -27,7 +27,7 @@ q = [{
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, inn_channel: int, channel: int, architecture: int, stride: int, identity=None):
+    def __init__(self, inn_channel: int, channel: int, architecture: int, stride: int = 1, identity=None):
         super(ResidualBlock, self).__init__()
         # this is the final output channel for each convo block,
         # which is the normal input_channel * 4
@@ -41,8 +41,7 @@ class ResidualBlock(nn.Module):
         # relu value
         self.relu = nn.ReLU()
 
-    def __make_layer(self, in_channel: int, channel: int, architecture: int, stride: int) -> Tuple[
-        List[F.conv2d], List[F.batch_norm]]:
+    def __make_layer(self, in_channel: int, channel: int, architecture: int, stride: int) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
         """
         :param architecture: Dict
         :return: List[List[nn.Module]]
@@ -81,65 +80,11 @@ class ResidualBlock(nn.Module):
         identity = x.clone()
         length = len(self.conv)
         for item in zip(self.conv, self.bn):
-            print("conv block", item)
             length -= 1
             if length != 0:
                 x = self.relu(item[1](item[0](x)))
             else:
                 x = item[1](item[0](x))
         if self.identity_block is not None:
-            print("identity", identity.shape)
             identity = self.identity_block(identity)
-            print("identity 2", identity.shape)
-        i = 0
-        i += 1
-        # if identity.shape != x.shape:
-        #     self.identity_block = self.__make_identity_block(self.channel, self.channel, self.stride)
-        #     identity = self.identity_block(identity)
-        print("talking about six here", i, identity.shape, x.shape)
-        x += identity
-        print(i)
-        x = self.relu(x)
-        print(1)
-        return x
-
-
-# model = nn.Sequential(nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), nn.BatchNorm2d(64), nn.ReLU())
-# layerss = []
-# layerss.append(model)
-# print('layers1', layerss)
-# layerss.append(model)
-# print('layers 2', layerss)
-# print('model 1', model)
-# layer = [nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), nn.BatchNorm2d(64), nn.ReLU(),
-#          nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1), nn.BatchNorm2d(64), nn.ReLU()]
-# # model1 = nn.Sequential(*layers)
-# # model1 = nn.Sequential(*layers)
-# print('model 2', layer)
-# [[nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), nn.BatchNorm2d(64), nn.ReLU()],
-#  [nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1), nn.BatchNorm2d(64), nn.ReLU()]]
-#
-# m = ResidualBlock(q)
-# # print('model 3', m)
-# # print('model 4', m(torch.randn(4, 64, 224, 224)))
-#
-
-# con = 'None' or 2
-# print('cons', con)
-# from resnet import ResNet
-
-# model = ResNet(3, q)
-# print('model', model)
-# a, b = layerss
-# print('a', a)
-# print('b', b)
-# for i in q:
-#     print(i.get('iteration'))
-# print(type(()))
-data = torch.randn(1, 64, 56, 56)
-model = nn.Sequential(nn.Conv2d(64, 64 * 4, kernel_size=1, stride=1, bias=False),
-                      nn.BatchNorm2d(64 * 4))
-print(model(data).shape)
-
-# model = ResidualBlock(q[0]["conv"])
-# print(model(data))
+        return self.relu(x + identity)
