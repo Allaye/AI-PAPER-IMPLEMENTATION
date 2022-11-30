@@ -24,13 +24,9 @@ class ResNet(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
         self.layer1 = self._make_resnet_layer(64, self.architecture, 1, loop[0])
-        print("first layer ", self.layer1)
         self.layer2 = self._make_resnet_layer(128, self.architecture, 2, loop[1])
-        print("first layer 2 ", self.layer2)
         self.layer3 = self._make_resnet_layer(256, self.architecture, 2, loop[2])
-        print("first layer 3", self.layer3)
         self.layer4 = self._make_resnet_layer(512, self.architecture, 2, loop[3])
-        print("first layer 4", self.layer4)
         self.fc = nn.Linear(512 * 4, num_classes)
 
     def forward(self, x):
@@ -51,14 +47,11 @@ class ResNet(nn.Module):
         identity_block = None
         layers = []
         if stride != 1 or self.in_channel != channel * 4:
-            print("stride or channel")
             identity_block = self.__make_identity_block(self.in_channel, channel, stride)
         layers.append(Rb(self.in_channel, channel, architecture, stride, identity_block))
-        print("done with channel")
         self.in_channel = channel * 4
         for _ in range(loop-1):
-            print("done with channel")
-            layers.append(Rb(self.in_channel, channel, architecture, stride))
+            layers.append(Rb(self.in_channel, channel, architecture))
 
         return nn.Sequential(*layers)
 
@@ -78,7 +71,7 @@ class ResNet(nn.Module):
 data = torch.randn(1, 3, 224, 224)
 model = ResNet(3, [3, 4, 6, 3], 3, 1000)
 # print('model', model)
-print('nodel size', model(data).size())
+print('model size', model(data).size())
 
 # RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[4, 1, 224, 224] to have 3 channels,
 # but got 1 channels instead
