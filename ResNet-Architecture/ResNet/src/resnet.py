@@ -14,16 +14,20 @@ from architecture import config
 
 
 class ResNet(nn.Module):
-    def __init__(self, image_channels, architecture: List[Dict], num_classes=100):
+    def __init__(self, image_channels, loop: List[int], architecture: int, num_classes=100):
         super(ResNet, self).__init__()
+        self.in_channel = 64
         self.conv1 = nn.Conv2d(image_channels, 64, kernel_size=7, stride=2, padding=3)
         self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU()
         self.architecture = architecture
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1, self.layer2, self.layer3, self.layer4 = self._make_resnet_layer(self.architecture)
-        self.fc = nn.Linear(self.get_last_channels(architecture), num_classes)
+        self.layer1 = self._make_resnet_layer(64, self.architecture, 1, loop[0])
+        self.layer2 = self._make_resnet_layer(128, self.architecture, 2, loop[1])
+        self.layer3 = self._make_resnet_layer(256, self.architecture, 2, loop[2])
+        self.layer4 = self._make_resnet_layer(512, self.architecture, 2, loop[3])
+        self.fc = nn.Linear(512 * 4, num_classes)
 
     def forward(self, x):
         x = self.maxpool(self.relu(self.bn1(self.conv1(x))))
@@ -32,7 +36,7 @@ class ResNet(nn.Module):
         x = x.reshape(x.shape[0], -1)
         return self.fc(x)
 
-    def _make_resnet_layer(self, architecture: List[int]):
+    def _make_resnet_layer(self, channel: int, architecture: int, stride: int, loop: int):
         """
         Steps:
         1. loop over the architecture and pass the first block to factory class
@@ -42,30 +46,17 @@ class ResNet(nn.Module):
         # architecture [3, 64, 1]
         identity_block = None
         layers = []
-        if architecture[-1] != 1:
-            identity_block = self.__make_identity_block(architecture[1], architecture[1]*4, architecture[2])
-        layers.append(Rb(architecture, identity_block))
-        for _ in range(3):
-            layers.append(Rb(architecture))
+        if stride != 1 or self.in_channel != channel * 4:
+            identity_block = self.__make_identity_block(self.in_channel, channel, stride)
+        layers.append(Rb(self.in_channel, channel, architecture, stride, identity_block))
+        self.in_channel = channel * 4
+        for _ in range(loop-1):
+            layers.append(Rb(self.in_channel, channel, architecture))
+
         return nn.Sequential(*layers)
 
-        # all_layers = []
-        # layers = []
-        # identity_block = None
-        # for layer in architecture:
-        #     # identity_block = None
-        #     if self.should_make_identity_block(layer):
-        #         print('identity block kicks in>>>>>')
-        #         identity_block = self._make_identity_block(out=layer.get('conv')[-1][-1],)
-        #     for _ in range(layer.get("iteration")):
-        #         layers.append(RB(layer.get("conv"), identity_block))
-        #         # identity_block = None
-        #     all_layers.append(nn.Sequential(*layers))
-        #     layers = []
-        # return all_layers
-
     @staticmethod
-    def __make_identity_block(self, in_channel, out_channel, stride):
+    def __make_identity_block(in_channel: int, out_channel: int, stride: int) -> nn.Sequential:
         """
         This is the identity block that is used when the input and output dimensions are not the same.
         How it is achieved : create a 1x1 conv block, then add it to the output of the residual block.
@@ -73,15 +64,14 @@ class ResNet(nn.Module):
         @param out_channel:
         @return:
         """
-        return nn.Sequential(nn.Conv2d(in_channel, out_channel*4, kernel_size=1, stride=stride, bias=False),
-                             nn.BatchNorm2d(out_channel))
+        return nn.Sequential(nn.Conv2d(in_channel, out_channel * 4, kernel_size=1, stride=stride, bias=False),
+                             nn.BatchNorm2d(out_channel*4))
 
 
-data = torch.randn(4, 3, 224, 224)
-model = ResNet(3, config.get("res50"))
+data = torch.randn(1, 3, 224, 224)
+model = ResNet(3, [3, 4, 6, 3], 3, 1000)
 # print('model', model)
-print('nodel size', model(data).size())
-
+print('model size', model(data).size())
 
 # RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[4, 1, 224, 224] to have 3 channels,
 # but got 1 channels instead
