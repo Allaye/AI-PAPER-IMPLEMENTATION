@@ -27,19 +27,22 @@ q = [{
 
 
 class ResidualBlock(nn.Module):
-    def __init__(self, architecture: List[int], identity=None):
+    def __init__(self, inn_channel: int, channel: int, architecture: int, stride: int, identity=None):
         super(ResidualBlock, self).__init__()
         # this is the final output channel for each convo block,
         # which is the normal input_channel * 4
+        self.inn_channel = inn_channel
+        self.stride = stride
         self.channel_expansion = 4
         # identity operation on the conv block if required
         self.identity_block = identity
         # get the conv block and other params
-        self.conv, self.bn = self.__make_layer(architecture)
+        self.conv, self.bn = self.__make_layer(self.inn_channel, channel, architecture, stride)
         # relu value
         self.relu = nn.ReLU()
 
-    def __make_layer(self, architecture: List[int]) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
+    def __make_layer(self, in_channel: int, channel: int, architecture: int, stride: int) -> Tuple[
+        List[F.conv2d], List[F.batch_norm]]:
         """
         :param architecture: Dict
         :return: List[List[nn.Module]]
@@ -47,8 +50,8 @@ class ResidualBlock(nn.Module):
         """
         # for i in range(architecture[0]['iteration']):
         # if the architecture type is type a then we create a 2 block convo self 3.
-        spun_up_block = self.__spinup_2_block() if architecture[0] == 2 else self.__spinup_3_block(architecture[1],
-                                                                                                   architecture[2])
+        spun_up_block = self.__spinup_2_block() if architecture == 2 else self.__spinup_3_block(in_channel, channel,
+                                                                                                stride)
         return spun_up_block
 
         # for conv in architecture:  # [3, 1, 0, 128, 256]
@@ -62,8 +65,8 @@ class ResidualBlock(nn.Module):
     def __spinup_2_block(self):
         return []
 
-    def __spinup_3_block(self, channel, stride) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
-        conv1 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=1, stride=1,
+    def __spinup_3_block(self, in_channel, channel, stride) -> Tuple[List[F.conv2d], List[F.batch_norm]]:
+        conv1 = nn.Conv2d(in_channels=in_channel, out_channels=channel, kernel_size=1, stride=1,
                           padding=0, bias=False)
         bn1 = nn.BatchNorm2d(channel)
         conv2 = nn.Conv2d(in_channels=channel, out_channels=channel, kernel_size=3, stride=stride,
@@ -78,14 +81,27 @@ class ResidualBlock(nn.Module):
         identity = x.clone()
         length = len(self.conv)
         for item in zip(self.conv, self.bn):
+            print("conv block", item)
             length -= 1
             if length != 0:
                 x = self.relu(item[1](item[0](x)))
             else:
                 x = item[1](item[0](x))
         if self.identity_block is not None:
+            print("identity", identity.shape)
             identity = self.identity_block(identity)
-        return self.relu(x + identity)
+            print("identity 2", identity.shape)
+        i = 0
+        i += 1
+        # if identity.shape != x.shape:
+        #     self.identity_block = self.__make_identity_block(self.channel, self.channel, self.stride)
+        #     identity = self.identity_block(identity)
+        print("talking about six here", i, identity.shape, x.shape)
+        x += identity
+        print(i)
+        x = self.relu(x)
+        print(1)
+        return x
 
 
 # model = nn.Sequential(nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3), nn.BatchNorm2d(64), nn.ReLU())
@@ -120,7 +136,10 @@ class ResidualBlock(nn.Module):
 # for i in q:
 #     print(i.get('iteration'))
 # print(type(()))
-data = torch.randn(3, 3, 224, 224)
+data = torch.randn(1, 64, 56, 56)
+model = nn.Sequential(nn.Conv2d(64, 64 * 4, kernel_size=1, stride=1, bias=False),
+                      nn.BatchNorm2d(64 * 4))
+print(model(data).shape)
 
 # model = ResidualBlock(q[0]["conv"])
 # print(model(data))
