@@ -8,7 +8,7 @@ from dataloader import CustomDataset
 from setting import *
 
 
-def training(model, dataloader, hyperparameters, device):
+def training(model: VGGNet, dataloader, hyperparameters, device):
     epochs, lr, batch_size, momentum = hyperparameters
     loss_fn, optimizer = model.loss_optimizer(lr, momentum)
     training_loss = 0.0
@@ -24,18 +24,19 @@ def training(model, dataloader, hyperparameters, device):
             optimizer.zero_grad()
             # perform a forward pass
             outputs = model(images).to(device)
-            # compute the loss values, perform a backward pass and update the weights/optimizer and record the loss value
+            # compute the loss values, perform a backward pass and update the weights/optimizer and record the loss
+            # value
             loss = loss_fn(outputs, label)
             loss.backward()
             optimizer.step()
-            training_loss += loss.item()*images.size(0)
+            training_loss += loss.item() * images.size(0)
             # print training statistics and other information
-            if index % 100 == 99:
+            if index % 100 == 0:
                 print(
                     f'Training Info: Epoch [{epoch + 1}/{epochs}], Step [{index + 1}/{len(dataloader[0])}] Avg_training_loss: {loss.item():.4f}')
         training_loss = training_loss / len(dataloader[0])
         print(f'Training Info after epoch {epoch + 1} of {epochs}: Avg_training_loss: {training_loss:.4f}')
-        eval_model(model, dataloader[1], device,  loss_fn)
+        eval_model(model, dataloader[1], device, loss_fn)
 
 
 def eval_model(model, test_loader, device, loss_fn=None):
@@ -72,7 +73,7 @@ def save_model(model, epoch, optimizer, best_acc):
 
 
 if __name__ == '__main__':
-    d_path = "C:\Python\Project\Personal\Python Project\Projects\Data\Algo-ML\dataset"
+    d_path = "./dataset"
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     data = CustomDataset(d_path, transform=[transforms.ToTensor(), transforms.Resize((224, 224))])
     dataset = data.getdataloader()

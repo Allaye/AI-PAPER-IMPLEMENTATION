@@ -3,9 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision.transforms import transforms
 
-from src.architecture import config
-from src.dataloader import CustomDataset
-
 
 class VGGNet(nn.Module):
     """
@@ -53,7 +50,7 @@ class VGGNet(nn.Module):
         return loss_fn, optimizer
 
     @staticmethod
-    def _make_convo_layers(architecture) -> torch.nn.Sequential:
+    def _make_convo_layers(architecture: list) -> torch.nn.Sequential:
         """
         Create convolutional layers from the vgg architecture type passed in.
         :param architecture:
@@ -63,15 +60,16 @@ class VGGNet(nn.Module):
         for layer in architecture:
             if type(layer) == int:
                 out_channels = layer
-                layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1), nn.ReLU()]
-                # layers.append([nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU()])
+                layers += [nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1),
+                           nn.ReLU()]  # can add a batchnorm2d if you want
+                # layers.extend([nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1, stride=1) + nn.ReLU()])
                 in_channels = layer
-            elif (layer == 'Conv1-256'):
+            elif layer == 'Conv1-256':
                 out_channels = 256
                 layers += [nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=1, stride=1), nn.ReLU()]
-            elif (layer == 'LRN'):
+            elif layer == 'LRN':
                 layers += [nn.LocalResponseNorm(5, alpha=0.0001, beta=0.75, k=1)]
-            elif (layer == 'M'):
-                layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+            elif layer == 'M':
+                layers.extend([nn.MaxPool2d(kernel_size=2, stride=2)])
         return nn.Sequential(*layers)
 

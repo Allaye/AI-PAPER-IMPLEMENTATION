@@ -1,10 +1,12 @@
 import torch
 from lenet import LeNet
 from dataset_loader import prepare_dataset
+from torch.utils.data import Dataset, DataLoader
 from configuration import hyperparameter, configure_device
+from utils import save_checkpoint
 
 
-def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size, optimizer) -> LeNet:
+def train(model: LeNet, train_loader: DataLoader, test_loader: DataLoader, epochs: int, loss_fn: torch.nn.modules.loss, device, batch_size, optimizer) -> torch.nn.Module:
     """
     perform model training loop and hyperparameter tuning
     :param model:
@@ -21,6 +23,8 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
     n_total_steps = len(train_loader)
     print(f"starting training now!")
     for epoch in range(epochs):
+        # put model in training mode and engage it to track the gradients
+        model.train()
         for i, (images, labels) in enumerate(train_loader):
             # move tensors to the configured device
             images = images.to(device)
@@ -28,10 +32,10 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
             # perform a forward pass
             outputs = model(images)
 
-            # calculate the loss
+            # calculate the loss (error rate or error margin)
             loss = loss_fn(outputs, labels)
 
-            # clear the gradients and perform a backward and optimize step
+            # engage model gradients and perform a backward and optimize step
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -41,7 +45,7 @@ def train(model, train_loader, test_loader, epochs, loss_fn, device, batch_size,
                 print(f'Epoch [{epoch + 1}/{epochs}], Step [{i + 1}/{n_total_steps}], Loss: {loss.item():.4f}')
             # perform model evaluation and testing
             test_accuracy = model_eval(model, test_loader, device, batch_size)
-            if (test_accuracy > best_accuracy):
+            if test_accuracy > best_accuracy:
                 best_accuracy = test_accuracy
                 save_checkpoint(model, epoch, optimizer, best_accuracy)
     return model
@@ -56,8 +60,9 @@ def model_eval(model, test_loader, device, batch_size) -> float:
     :param batch_size:
     :return: accuracy of type float
     """
-    # disengage the model from tracking the gradients
-    with torch.no_grad():
+    # put model in evaluation mode and disengage it from tracking the gradients
+    model.eval()
+    with torch.no_grad():  # torch.inference_mode():
         # initialize variables
         total_correct = 0
         total_sample = 0
@@ -91,28 +96,9 @@ def model_eval(model, test_loader, device, batch_size) -> float:
     return total_accuracy
 
 
-def save_checkpoint(model, epoch, optimizer, best_accuracy) -> None:
-    """
-    save the trained model on each checkpoint
-    :param model:
-    :param epoch:
-    :param optimizer:
-    :param best_accuracy:
-    :return: None type
-    """
-    check_point = {
-        "epoch": epoch + 1,
-        "model_state_dict": model.state_dict(),
-        "optimizer_state_dict": optimizer.state_dict(),
-        "best_accuracy": best_accuracy
-    }
-    torch.save(check_point, f"/models/checkpoint{epoch}.pth")
-    return None
-
-
 if __name__ == "__main__":
-    # load hyperparameters
-    print("loading hyperparameters")
+    # load hyper parameters
+    print("loading hyper parameters")
     learning_rate, epochs, batch_size = hyperparameter()
 
     # load dataset

@@ -1,17 +1,18 @@
 import torch
+from typing import Dict
 
 
-def configure_device() -> torch.device:
+def configureDevice() -> dict:
     """
-    check if GPU is available and use it else use CPU
+    Check if GPU is available and use it else use CPU
     :return: device cuda or cpu
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("device:", device)
-    return device
+    return {'device': device}
 
 
-def hyperparameter() -> tuple:
+def hyperParameter() -> dict:
     """
     static configuration of hyper parameters
     :return: hyper parameters of type tuple
@@ -19,4 +20,4 @@ def hyperparameter() -> tuple:
     lr = 0.001
     epochs = 20
     batch_size = 100
-    return lr, epochs, batch_size
+    return {'lr': lr, 'epochs': epochs, 'batch_size': batch_size}
